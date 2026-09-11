@@ -1,0 +1,10 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Temporary placeholder
+        run: echo "Workflow is temporarily disabled — will be fixed soon"

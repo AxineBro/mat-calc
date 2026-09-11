@@ -1,0 +1,15 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Temporary placeholder
+        run: echo "Workflow is temporarily disabled — will be fixed soon"
