@@ -1,0 +1,36 @@
+services:
+  backend:
+    image: ghcr.io/axinebro/matcalc-backend:latest
+    container_name: matcalc-backend
+    environment:
+      - JAVA_OPTS=${JAVA_OPTS:--Xmx512m -Xms256m}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
+    env_file:
+      - .env
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    image: ghcr.io/axinebro/matcalc-frontend:latest
+    container_name: matcalc-frontend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  nginx:
+    image: ghcr.io/axinebro/matcalc-nginx:latest
+    container_name: matcalc-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
