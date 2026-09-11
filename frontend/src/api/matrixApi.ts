@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_URL ?? '/api';
 
 export class ApiError extends Error {
   status?: number;
@@ -14,7 +14,7 @@ export async function calculateDeterminant(
   matrix: number[][],
   signal?: AbortSignal,
 ): Promise<number> {
-  const res = await fetch(`${API_BASE}/api/matrix/determinant`, {
+  const res = await fetch(`${API_BASE}/matrix/determinant`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ matrix }),
