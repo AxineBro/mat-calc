@@ -4,9 +4,13 @@ export type OperationId =
   | 'determinant'
   | 'inverse'
   | 'cramer'
-  | 'solveByInverse';
+  | 'solveByInverse'
+  | 'gauss'
+  | 'eigen';
+
+
 export type OperationCategory = 'matrix' | 'system';
-export type ResultKind = 'scalar' | 'vector' | 'matrix';
+export type ResultKind = 'scalar' | 'vector' | 'matrix' | 'eigen';
 
 export type OperationDef = {
   id: OperationId;
@@ -33,6 +37,17 @@ export const OPERATIONS: OperationDef[] = [
     resultKind: 'scalar',
   },
   {
+    id: 'eigen',
+    category: 'matrix',
+    labelKey: 'opEigenLabel',
+    descriptionKey: 'opEigenDesc',
+    shapeKey: 'opEigenShape',
+    icon: <IconEigen />,
+    requiresVector: false,
+    requiresSquare: true,
+    resultKind: 'eigen',
+  },
+  {
     id: 'inverse',
     category: 'matrix',
     labelKey: 'opInverseLabel',
@@ -42,6 +57,17 @@ export const OPERATIONS: OperationDef[] = [
     requiresVector: false,
     requiresSquare: true,
     resultKind: 'matrix',
+  },
+  {
+    id: 'gauss',
+    category: 'system',
+    labelKey: 'opGaussLabel',
+    descriptionKey: 'opGaussDesc',
+    shapeKey: 'opGaussShape',
+    icon: <IconGauss />,
+    requiresVector: true,
+    requiresSquare: true,
+    resultKind: 'vector',
   },
   {
     id: 'cramer',
@@ -64,7 +90,7 @@ export const OPERATIONS: OperationDef[] = [
     requiresVector: true,
     requiresSquare: true,
     resultKind: 'vector',
-    },
+  },
 ];
 
 export const OPERATION_BY_ID = Object.fromEntries(
@@ -120,6 +146,30 @@ function IconInverseSystem() {
         stroke="currentColor" strokeWidth="1.7"
         strokeLinecap="round" strokeLinejoin="round"
         transform="translate(-3 0)" />
+    </svg>
+  );
+}
+
+function IconGauss() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="4" width="6" height="4" rx="1"
+        stroke="currentColor" strokeWidth="1.6" />
+      <rect x="9" y="10" width="6" height="4" rx="1"
+        stroke="currentColor" strokeWidth="1.6" />
+      <rect x="15" y="16" width="6" height="4" rx="1"
+        stroke="currentColor" strokeWidth="1.6" />
+      <path d="M11 3v18" stroke="currentColor" strokeWidth="1.4" strokeDasharray="2 2.4" />
+    </svg>
+  );
+}
+
+function IconEigen() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 20 9 4M4 20l6-3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14 6h6M14 12h6M14 18h6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" opacity="0.55" />
+      <circle cx="18" cy="18" r="2" stroke="currentColor" strokeWidth="1.6" />
     </svg>
   );
 }

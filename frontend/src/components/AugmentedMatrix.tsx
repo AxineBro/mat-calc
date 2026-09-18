@@ -4,7 +4,7 @@ import type { Matrix, Vector } from '../types';
 
 type Props = {
   matrix: Matrix;
-  vector: Vector | null; // null — операция не использует вектор
+  vector: Vector | null;
   onMatrixChange: (m: Matrix) => void;
   onVectorChange: (v: Vector) => void;
   onCommit: (m: Matrix) => void;
@@ -96,7 +96,6 @@ export function AugmentedMatrix({
     if (e.key === 'Enter') {
       e.preventDefault();
       if (isLastCell) onCommit(matrix);
-      // переход к следующей ячейке
       const next = e.currentTarget.closest('.am__content')?.querySelectorAll<HTMLInputElement>('input.am__cell');
       if (!next) return;
       const arr = Array.from(next);

@@ -4,5 +4,7 @@ public enum OperationType {
     DETERMINANT,
     CRAMER,
     INVERSE,
-    SOLVE_BY_INVERSE
+    SOLVE_BY_INVERSE,
+    GAUSS,
+    EIGEN
 }

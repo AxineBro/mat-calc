@@ -1,5 +1,28 @@
 /* =========================================================
-   Темы
+   index.css
+   ---------------------------------------------------------
+   1.  Темы
+   2.  База
+   3.  Header
+   4.  Рабочая область (workspace)
+   5.  Пикер операции (op)
+   6.  Матрица (matrix)
+   7.  Расширенная матрица [A | b] (am)
+   8.  Вектор (vector)
+   9.  Панель настроек (settings)
+   10. Переключатель режима (mode-selector)
+   11. Результат (result)
+   12. Карточка результата (card)
+   13. Полоска решений (solution)
+   14. Матрица в результате (matrix-result)
+   15. Собственные пары (eigen)
+   16. Спиннер
+   17. Общие элементы (upload-error, drag&drop, scroll)
+   ========================================================= */
+
+
+/* =========================================================
+   1. Темы
    ========================================================= */
 :root {
   --bg: #f6f7f9;
@@ -49,8 +72,9 @@
   --shadow-md: 0 8px 24px rgba(0, 0, 0, .5);
 }
 
+
 /* =========================================================
-   База
+   2. База
    ========================================================= */
 * { box-sizing: border-box; }
 
@@ -76,624 +100,74 @@ button { font: inherit; }
   }
 }
 
+
 /* =========================================================
-   Header
+   3. Header
    ========================================================= */
 .header {
-  padding: 16px 32px;
+  position: relative;
+  z-index: 20;
+  padding: 14px 32px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  min-height: 64px;
+  gap: 20px;
+  min-height: 76px;
 }
+
 .header__brand {
   display: flex;
   align-items: baseline;
   gap: 16px;
-  flex-wrap: wrap;
   min-width: 0;
-}
-.header h1 { font-size: 20px; margin: 0; }
-.header__sub { color: var(--text-muted); font-size: 14px; }
-
-@media (max-width: 560px) {
-  .header { padding: 12px 16px; }
-  .header__sub { display: none; }
-}
-
-/* =========================================================
-   Рабочая область
-   ========================================================= */
-.workspace {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  align-items: start;
-}
-.workspace__inputs { display: flex; flex-direction: column; gap: 24px; }
-
-@media (max-width: 800px) {
-  .workspace { grid-template-columns: 1fr; padding: 16px; gap: 24px; }
-}
-
-/* =========================================================
-   Матрица
-   ========================================================= */
-.matrix { display: flex; flex-direction: column; gap: 12px; }
-
-.matrix__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-.matrix__name { font-weight: 600; }
-
-.matrix__tools {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.matrix__toolbar {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px;
-  gap: 2px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-/* Разделитель внутри тулбара */
-.tool-sep {
-  width: 1px;
-  align-self: stretch;
-  margin: 4px 2px;
-  background: var(--border);
-}
-
-/* Скрытый input[type=file] */
-.matrix__file-input {
-  display: none;
-}
-
-/* ---------- Drag & drop ---------- */
-.matrix {
-  position: relative;
-  border-radius: 12px;
-  transition: box-shadow .15s ease;
-}
-.matrix--dropping {
-  box-shadow: 0 0 0 2px var(--accent), 0 0 0 8px var(--focus-ring);
-}
-
-.matrix__drop-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border: 2px dashed var(--accent);
-  color: var(--text);
-  font-weight: 600;
-  font-size: 15px;
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* ---------- Сообщение об ошибке загрузки ---------- */
-.upload-error {
-  margin-top: 8px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: var(--error-bg);
-  border: 1px solid var(--error-border);
-  color: var(--error-text);
-  font-size: 13px;
-}
-
-.tool-btn {
-  width: 28px;
-  height: 28px;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  border-radius: 6px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .12s, color .12s;
-}
-.tool-btn:hover:not(:disabled) {
-  background: var(--surface);
-  color: var(--text);
-}
-.tool-btn:active:not(:disabled) {
-  transform: translateY(1px);
-}
-.tool-btn:disabled {
-  opacity: .35;
-  cursor: not-allowed;
-}
-.tool-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.matrix__dim {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.matrix__body {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-  grid-template-rows: auto auto;
-  column-gap: 8px;
-  row-gap: 10px;
-  justify-content: start;
-  align-items: stretch;
-}
-
-.matrix__bracket {
-  width: 8px;
-  border: 2px solid var(--border-strong);
-}
-.matrix__bracket--left  { grid-column: 1; grid-row: 1; border-right: none; }
-.matrix__bracket--right { grid-column: 3; grid-row: 1; border-left: none; }
-
-.matrix__grid {
-  grid-column: 2;
-  grid-row: 1;
-  display: grid;
-  gap: 6px;
-  padding: 12px 8px;
-}
-
-.matrix__cell {
-  width: 64px;
-  height: 40px;
-  text-align: center;
-  font-size: 15px;
-  font-variant-numeric: tabular-nums;
-  border: 1px solid var(--border-strong);
-  border-radius: 6px;
-  outline: none;
-  background: var(--surface);
-  color: var(--text);
-  transition: border-color .12s, box-shadow .12s, background-color .2s, color .2s;
-}
-.matrix__cell:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-.matrix__cell--invalid {
-  border-color: var(--error-cell-border);
-  background: var(--error-cell-bg);
-}
-.matrix__cell--invalid:focus {
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, .18);
-}
-
-/* ---------- Краевые кнопки ---------- */
-.matrix__edge--col {
-  grid-column: 4;
-  grid-row: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-}
-.matrix__edge--row {
-  grid-column: 2;
-  grid-row: 2;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-
-.edge-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  border: 1px dashed var(--edge-btn-border);
-  background: var(--edge-btn-bg);
-  color: var(--edge-btn-text);
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color .15s, background .15s, color .15s, border-style .15s;
-}
-.edge-btn:hover:not(:disabled) {
-  border-style: solid;
-  border-color: var(--text);
-  background: var(--surface);
-  color: var(--text);
-}
-.edge-btn:active:not(:disabled) { transform: translateY(1px); }
-.edge-btn:disabled {
-  opacity: .3;
-  cursor: not-allowed;
-  border-color: var(--border);
-}
-.edge-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* =========================================================
-   Результат
-   ========================================================= */
-.result {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px 24px;
-  min-height: 120px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: background-color .2s, border-color .2s;
-}
-
-.result--empty {
-  color: var(--text-faint);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.result__placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 76px;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 15px;
-}
-.result__placeholder--error { color: var(--error-text); }
-.result__placeholder--info  { color: var(--text-muted); }
-.result__placeholder--loading { color: var(--text-muted); }
-
-.result__body {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: opacity .15s ease;
-}
-.result__body--stale { opacity: .55; }
-
-.result__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.result__title {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-}
-.result__label {
-  font-size: 13px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-.result__context {
-  font-size: 13px;
-  color: var(--text-faint);
-  font-variant-numeric: tabular-nums;
-}
-
-.result__scalar {
-  font-size: 32px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.1;
-  word-break: break-all;
-}
-
-.result__copy {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 13px;
-  cursor: pointer;
-  transition: background .12s, color .12s, border-color .12s;
-}
-.result__copy:hover {
-  background: var(--hover);
-  color: var(--text);
-  border-color: var(--border-strong);
-}
-.result__copy:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.result__copy-text { font-weight: 500; }
-
-.result__status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-.result__status--error { color: var(--error-text); }
-.result__status--loading { color: var(--text-muted); }
-
-/* =========================================================
-   Спиннер
-   ========================================================= */
-.spinner {
-  display: inline-flex;
-  animation: spin .8s linear infinite;
-  color: currentColor;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* =========================================================
-   Панель настроек в шапке
-   ========================================================= */
-.settings {
-  position: relative;
   flex-shrink: 0;
 }
-
-.settings__trigger {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: transparent;
+.header h1 { font-size: 20px; margin: 0; }
+.header__sub {
   color: var(--text-muted);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .12s, color .12s, border-color .12s;
-}
-.settings__trigger:hover {
-  background: var(--hover);
-  color: var(--text);
-  border-color: var(--border);
-}
-.settings__trigger[aria-expanded="true"] {
-  background: var(--hover);
-  color: var(--text);
-  border-color: var(--border);
-}
-.settings__trigger:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.settings__panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 50;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
-  box-shadow: var(--shadow-md);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 280px;
-  animation: settings-in .15s ease-out;
-}
-@keyframes settings-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.settings__group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.settings__label {
-  font-size: 11px;
-  color: var(--text-faint);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  font-weight: 600;
-}
-
-/* ---------- Segmented ---------- */
-.segmented {
-  display: inline-flex;
-  padding: 3px;
-  gap: 2px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  width: 100%;
-}
-
-.segmented__btn {
-  appearance: none;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 6px 10px;
-  flex: 1;
-  min-height: 30px;
-  border-radius: 7px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: background .15s, color .15s, box-shadow .15s;
-  white-space: nowrap;
-}
-.segmented__btn:hover:not(.segmented__btn--active) {
-  color: var(--text);
-}
-.segmented__btn--active {
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: var(--shadow-sm);
-}
-.segmented__btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-@media (max-width: 400px) {
-  .settings__panel { min-width: 240px; }
-  .segmented__btn span { display: none; }
-}
-
-/* =========================================================
-   Переключатель режима
-   ========================================================= */
-.mode-selector {
-  display: inline-flex;
-  padding: 3px;
-  gap: 2px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  align-self: flex-start;
-}
-.mode-selector__btn {
-  appearance: none;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 7px;
-  transition: background .15s, color .15s, box-shadow .15s;
-  white-space: nowrap;
-}
-.mode-selector__btn:hover:not(.mode-selector__btn--active) {
-  color: var(--text);
-}
-.mode-selector__btn--active {
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: var(--shadow-sm);
-}
-.mode-selector__btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-/* =========================================================
-   Вектор (столбец свободных членов)
-   ========================================================= */
-.vector {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.vector__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-.vector__name { font-weight: 600; }
-.vector__dim {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
+  font-size: 14px;
   white-space: nowrap;
 }
 
-.vector__body {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-  column-gap: 8px;
-  justify-content: start;
-  align-items: stretch;
+/* Пикер — сразу за брендом, фиксированной ширины */
+.header__op {
+  flex: 0 0 auto;
+  width: 280px;
+  min-width: 0;
 }
-.vector__bracket {
-  width: 8px;
-  border: 2px solid var(--border-strong);
+
+/* Пружина: толкает шестерёнку вправо */
+.header__spacer {
+  flex: 1 1 auto;
+  min-width: 0;
 }
-.vector__bracket--left  { border-right: none; }
-.vector__bracket--right { border-left: none; }
-.vector__grid {
-  display: grid;
-  gap: 6px;
-  padding: 12px 8px;
+
+@media (max-width: 1024px) {
+  .header__op { width: 240px; }
 }
-.vector__edge {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
+
+@media (max-width: 860px) {
+  .header {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+    min-height: 0;
+  }
+  .header__brand { flex: 1 1 auto; }
+  .header__sub { display: none; }
+  .header__op {
+    order: 3;
+    flex: 1 1 100%;
+    width: auto;
+  }
+  .header__spacer { display: none; }
 }
+
 
 /* =========================================================
-   Полоска решений Крамера
+   4. Рабочая область (workspace)
    ========================================================= */
-.solution {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding-top: 4px;
-}
-.solution__item {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-}
-.solution__var {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
-.solution__value {
-  font-size: 20px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  word-break: break-all;
-}
-
-/* ============ Workspace ============ */
 .workspace {
   max-width: 1180px;
   margin: 0 auto;
@@ -703,15 +177,20 @@ button { font: inherit; }
   gap: 40px;
   align-items: start;
 }
-.workspace__inputs { display: flex; flex-direction: column; gap: 20px; }
-.workspace__result { position: sticky; top: 24px; }
 
-@media (max-width: 900px) {
-  .workspace { grid-template-columns: 1fr; padding: 20px; gap: 24px; }
-  .workspace__result { position: static; }
+.workspace__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.workspace__op { display: flex; flex-direction: column; gap: 8px; }
+.workspace__result { position: sticky; top: 24px; }
+
+.workspace__op {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 .workspace__op-label {
   font-size: 11px;
   font-weight: 600;
@@ -720,7 +199,23 @@ button { font: inherit; }
   color: var(--text-faint);
 }
 
-/* ============ Operation picker ============ */
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 24px;
+  }
+  .workspace__result { position: static; }
+}
+
+@media (max-width: 800px) {
+  .workspace { padding: 16px; gap: 24px; }
+}
+
+
+/* =========================================================
+   5. Пикер операции (op)
+   ========================================================= */
 .op { position: relative; }
 
 .op__trigger {
@@ -812,7 +307,39 @@ button { font: inherit; }
   color: var(--text);
 }
 
-.op__list { max-height: 380px; overflow-y: auto; padding: 6px; }
+.op__list {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 6px;
+
+  /* Firefox + современный Chrome (>=121) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/* WebKit (Safari, Chrome, Edge) */
+.op__list::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.op__list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.op__list::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background-color .15s;
+}
+.op__list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+.op__list::-webkit-scrollbar-corner {
+  background: transparent;
+}
 .op__group + .op__group { margin-top: 4px; }
 .op__group-label {
   padding: 10px 12px 6px;
@@ -855,11 +382,213 @@ button { font: inherit; }
 .op__item-check { color: var(--accent); display: inline-flex; }
 .op__empty { padding: 24px; text-align: center; color: var(--text-faint); font-size: 13px; }
 
-/* ============ Augmented matrix ============ */
-/* ============ Augmented matrix ============ */
+
+/* =========================================================
+   6. Матрица (matrix)
+   ========================================================= */
+.matrix {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 12px;
+  transition: box-shadow .15s ease;
+}
+.matrix--dropping {
+  box-shadow: 0 0 0 2px var(--accent), 0 0 0 8px var(--focus-ring);
+}
+
+.matrix__drop-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 2px dashed var(--accent);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.matrix__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.matrix__name { font-weight: 600; }
+
+.matrix__tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.matrix__toolbar {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.tool-sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 2px;
+  background: var(--border);
+}
+
+.matrix__file-input { display: none; }
+
+.tool-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .12s, color .12s;
+}
+.tool-btn:hover:not(:disabled) {
+  background: var(--surface);
+  color: var(--text);
+}
+.tool-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.tool-btn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+.tool-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.matrix__dim {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.matrix__body {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  row-gap: 10px;
+  justify-content: start;
+  align-items: stretch;
+}
+
+.matrix__bracket {
+  width: 8px;
+  border: 2px solid var(--border-strong);
+}
+.matrix__bracket--left  { grid-column: 1; grid-row: 1; border-right: none; }
+.matrix__bracket--right { grid-column: 3; grid-row: 1; border-left: none; }
+
+.matrix__grid {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  gap: 6px;
+  padding: 12px 8px;
+}
+
+.matrix__cell {
+  width: 64px;
+  height: 40px;
+  text-align: center;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  outline: none;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color .12s, box-shadow .12s, background-color .2s, color .2s;
+}
+.matrix__cell:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+.matrix__cell--invalid {
+  border-color: var(--error-cell-border);
+  background: var(--error-cell-bg);
+}
+.matrix__cell--invalid:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .18);
+}
+
+/* Краевые кнопки */
+.matrix__edge--col {
+  grid-column: 4;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+.matrix__edge--row {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.edge-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px dashed var(--edge-btn-border);
+  background: var(--edge-btn-bg);
+  color: var(--edge-btn-text);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .15s, background .15s, color .15s, border-style .15s;
+}
+.edge-btn:hover:not(:disabled) {
+  border-style: solid;
+  border-color: var(--text);
+  background: var(--surface);
+  color: var(--text);
+}
+.edge-btn:active:not(:disabled) { transform: translateY(1px); }
+.edge-btn:disabled {
+  opacity: .3;
+  cursor: not-allowed;
+  border-color: var(--border);
+}
+.edge-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   7. Расширенная матрица [A | b] (am)
+   ========================================================= */
 .am {
-  /* ГЛАВНОЕ: не растягиваться по ширине flex-родителя,
-     а сжиматься до содержимого. Плюс страховка от переполнения. */
+  /* не растягиваться по ширине flex-родителя, а сжиматься до содержимого */
   align-self: flex-start;
   max-width: 100%;
   min-width: 0;
@@ -878,7 +607,6 @@ button { font: inherit; }
   box-shadow: 0 0 0 4px var(--focus-ring);
 }
 
-/* Тулбар — по контенту, но не шире карточки */
 .am__toolbar {
   display: flex;
   align-items: center;
@@ -911,7 +639,7 @@ button { font: inherit; }
 .tool:disabled { opacity: .35; cursor: not-allowed; }
 .tool:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-/* Строка [A | b] — по ширине содержимого, скобки вплотную */
+/* Строка [A | b] */
 .am__body {
   display: inline-flex;
   align-items: stretch;
@@ -920,7 +648,6 @@ button { font: inherit; }
   max-width: 100%;
 }
 
-/* Контент НЕ тянется (никакого flex:1) и НЕ скроллится */
 .am__content {
   display: inline-flex;
   align-items: center;
@@ -964,7 +691,6 @@ button { font: inherit; }
   flex-shrink: 0;
 }
 
-/* Ячейка: может сжиматься ниже 64px, чтобы влезало без скролла */
 .am__cell {
   width: 100%;
   min-width: 0;
@@ -1002,7 +728,327 @@ button { font: inherit; }
 .am__dim { font-variant-numeric: tabular-nums; }
 .am__drop-hint { color: var(--accent); font-weight: 500; }
 
-/* ============ Result card ============ */
+
+/* =========================================================
+   8. Вектор (vector)
+   ========================================================= */
+.vector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.vector__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.vector__name { font-weight: 600; }
+.vector__dim {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.vector__body {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  column-gap: 8px;
+  justify-content: start;
+  align-items: stretch;
+}
+.vector__bracket {
+  width: 8px;
+  border: 2px solid var(--border-strong);
+}
+.vector__bracket--left  { border-right: none; }
+.vector__bracket--right { border-left: none; }
+.vector__grid {
+  display: grid;
+  gap: 6px;
+  padding: 12px 8px;
+}
+.vector__edge {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+
+/* =========================================================
+   9. Панель настроек (settings)
+   ========================================================= */
+.settings {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.settings__trigger {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .12s, color .12s, border-color .12s;
+}
+.settings__trigger:hover {
+  background: var(--hover);
+  color: var(--text);
+  border-color: var(--border);
+}
+.settings__trigger[aria-expanded="true"] {
+  background: var(--hover);
+  color: var(--text);
+  border-color: var(--border);
+}
+.settings__trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.settings__panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 50;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 280px;
+  animation: settings-in .15s ease-out;
+}
+@keyframes settings-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.settings__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.settings__label {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 600;
+}
+
+/* Segmented */
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 100%;
+}
+.segmented__btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 10px;
+  flex: 1;
+  min-height: 30px;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background .15s, color .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+.segmented__btn:hover:not(.segmented__btn--active) {
+  color: var(--text);
+}
+.segmented__btn--active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.segmented__btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+@media (max-width: 400px) {
+  .settings__panel { min-width: 240px; }
+  .segmented__btn span { display: none; }
+}
+
+
+/* =========================================================
+   10. Переключатель режима (mode-selector)
+   ========================================================= */
+.mode-selector {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  align-self: flex-start;
+}
+.mode-selector__btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 7px;
+  transition: background .15s, color .15s, box-shadow .15s;
+  white-space: nowrap;
+}
+.mode-selector__btn:hover:not(.mode-selector__btn--active) {
+  color: var(--text);
+}
+.mode-selector__btn--active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.mode-selector__btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+
+/* =========================================================
+   11. Результат (result)
+   ========================================================= */
+.result {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background-color .2s, border-color .2s;
+}
+
+.result--empty {
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.result__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 76px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+.result__placeholder--error   { color: var(--error-text); }
+.result__placeholder--info    { color: var(--text-muted); }
+.result__placeholder--loading { color: var(--text-muted); }
+
+.result__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: opacity .15s ease;
+}
+.result__body--stale { opacity: .55; }
+
+.result__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.result__title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+.result__label {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.result__context {
+  font-size: 13px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.result__scalar {
+  font-size: 32px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  word-break: break-all;
+}
+
+.result__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .12s, color .12s, border-color .12s;
+}
+.result__copy:hover {
+  background: var(--hover);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.result__copy:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.result__copy-text { font-weight: 500; }
+
+.result__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.result__status--error   { color: var(--error-text); }
+.result__status--loading { color: var(--text-muted); }
+
+
+/* =========================================================
+   12. Карточка результата (card)
+   ========================================================= */
 .card {
   display: flex;
   flex-direction: column;
@@ -1050,7 +1096,12 @@ button { font: inherit; }
 }
 .placeholder--error { color: var(--error-text); }
 
-.card__body { display: flex; flex-direction: column; gap: 12px; transition: opacity .15s; }
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: opacity .15s;
+}
 .card__body--stale { opacity: .5; }
 
 .card__head {
@@ -1086,7 +1137,11 @@ button { font: inherit; }
   cursor: pointer;
   transition: background .12s, color .12s, border-color .12s;
 }
-.copy:hover { background: var(--hover); color: var(--text); border-color: var(--border-strong); }
+.copy:hover {
+  background: var(--hover);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
 
 .scalar {
   font-size: 42px;
@@ -1095,29 +1150,6 @@ button { font: inherit; }
   font-variant-numeric: tabular-nums;
   word-break: break-all;
   letter-spacing: -.01em;
-}
-
-.solution {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.solution__chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 10px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-}
-.solution__var { font-size: 14px; color: var(--text-muted); }
-.solution__eq { color: var(--text-faint); font-size: 13px; }
-.solution__val {
-  font-size: 18px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  word-break: break-all;
 }
 
 .card__status {
@@ -1129,16 +1161,61 @@ button { font: inherit; }
 }
 .card__status--error { color: var(--error-text); }
 
-.upload-error {
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: var(--error-bg);
-  border: 1px solid var(--error-border);
-  color: var(--error-text);
-  font-size: 13px;
+
+/* =========================================================
+   13. Полоска решений (solution)
+   ========================================================= */
+.solution {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
 }
 
-/* ============ Результат — матрица ============ */
+/* Вариант «item» */
+.solution__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.solution__var {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.solution__value {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+
+/* Вариант «chip» */
+.solution__chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+.solution__eq { color: var(--text-faint); font-size: 13px; }
+.solution__val {
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+
+
+/* =========================================================
+   14. Матрица в результате (matrix-result)
+   ========================================================= */
 .matrix-result {
   display: inline-flex;
   align-items: stretch;
@@ -1188,4 +1265,108 @@ button { font: inherit; }
   border: 1px solid var(--border);
   word-break: break-all;
   text-align: center;
+}
+
+
+/* =========================================================
+   15. Собственные пары (eigen)
+   ========================================================= */
+.eigen {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.eigen__pair {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.eigen__head {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 96px;
+}
+.eigen__var { font-size: 14px; color: var(--text-muted); }
+.eigen__eq  { color: var(--text-faint); font-size: 13px; }
+.eigen__lambda {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+
+.eigen__vec {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 6px;
+  min-width: 0;
+}
+.eigen__vec-bracket {
+  width: 8px;
+  border: 2px solid var(--border-strong);
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+.eigen__vec-bracket:first-child {
+  border-right: none;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.eigen__vec-bracket:last-child {
+  border-left: none;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.eigen__vec-grid {
+  display: grid;
+  gap: 4px;
+  padding: 4px 2px;
+  min-width: 0;
+}
+.eigen__vec-cell {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  padding: 2px 6px;
+  min-width: 0;
+  word-break: break-all;
+}
+
+@media (max-width: 480px) {
+  .eigen__pair { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+
+/* =========================================================
+   16. Спиннер
+   ========================================================= */
+.spinner {
+  display: inline-flex;
+  animation: spin .8s linear infinite;
+  color: currentColor;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* =========================================================
+   17. Общие элементы
+   ========================================================= */
+.upload-error {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error-text);
+  font-size: 13px;
 }

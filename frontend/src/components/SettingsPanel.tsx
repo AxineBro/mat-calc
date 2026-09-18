@@ -102,8 +102,6 @@ export function SettingsPanel() {
   );
 }
 
-/* ---------- Segmented control (полный ARIA radiogroup) ---------- */
-
 type SegOption<T extends string> = {
   value: T;
   label: ReactNode;

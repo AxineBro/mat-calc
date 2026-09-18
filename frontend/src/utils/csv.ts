@@ -6,16 +6,6 @@ export type CsvParseResult =
 
 const DEFAULT_MAX = 10;
 
-/**
- * Разбирает CSV/TSV-подобный текст в матрицу строк.
- *
- * - Автоматически определяет разделитель по первой значимой строке:
- *   табуляция > точка с запятой > запятая.
- * - Учитывает BOM (UTF-8 от Excel).
- * - Обрезает хвостовые пустые ячейки, которые любит добавлять Excel.
- * - Проверяет, что размер не превышает maxSize.
- * - НЕ валидирует содержимое ячеек — это делает parseMatrix в пайплайне.
- */
 export function parseDelimited(text: string, maxSize: number = DEFAULT_MAX): CsvParseResult {
   const clean = text
     .replace(/^\uFEFF/, '')
@@ -30,8 +20,6 @@ export function parseDelimited(text: string, maxSize: number = DEFAULT_MAX): Csv
     (delimiter ? line.split(delimiter) : [line]).map(c => c.trim()),
   );
 
-  // Хвостовые пустые ячейки, которые иногда оставляет Excel,
-  // не должны раздувать ширину матрицы.
   const width = Math.max(1, ...raw.map(effectiveWidth));
 
   if (raw.length > maxSize || width > maxSize) {

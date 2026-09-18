@@ -37,7 +37,6 @@ public final class LinearSystem {
         return constants.clone();
     }
 
-    /** Возвращает копию матрицы A с заменённым столбцом column на replacement. */
     public Matrix withColumnReplaced(int column, double[] replacement) {
         double[][] a = coefficients.toArray();
         for (int i = 0; i < a.length; i++) {

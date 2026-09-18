@@ -95,6 +95,19 @@ const ru = {
   opSolveByInverseLabel: 'Метод обратной матрицы',
   opSolveByInverseDesc: 'Решение СЛАУ как x = A⁻¹ · b',
   opSolveByInverseShape: '[A | b] → x₁ … xₙ',
+
+  opGaussLabel: 'Метод Гаусса',
+  opGaussDesc: 'Последовательное исключение неизвестных',
+  opGaussShape: '[A | b] → x₁ … xₙ',
+  gaussNoUniqueSolution:
+    'Система не имеет единственного решения (нет решений или их бесконечно много)',
+
+  opEigenLabel: 'Собственные числа и векторы',
+  opEigenDesc: 'Спектр матрицы: A · v = λ · v',
+  opEigenShape: 'A → (λ₁, v₁) … (λₙ, vₙ)',
+
+  eigenLabel: 'Собственные пары',
+  eigenNoReal: 'У матрицы есть комплексные собственные значения — не поддерживается',
 };
 
 export type TranslationKey = keyof typeof ru;
@@ -194,6 +207,19 @@ const en: Record<TranslationKey, string> = {
   opSolveByInverseLabel: 'Inverse-matrix method',
   opSolveByInverseDesc: 'Solve SLE as x = A⁻¹ · b',
   opSolveByInverseShape: '[A | b] → x₁ … xₙ',
+
+  opGaussLabel: 'Gaussian elimination',
+  opGaussDesc: 'Sequential elimination of unknowns',
+  opGaussShape: '[A | b] → x₁ … xₙ',
+  gaussNoUniqueSolution:
+    'System has no unique solution (none or infinitely many)',
+
+  opEigenLabel: 'Eigenvalues & eigenvectors',
+  opEigenDesc: 'Spectrum of the matrix: A · v = λ · v',
+  opEigenShape: 'A → (λ₁, v₁) … (λₙ, vₙ)',
+
+  eigenLabel: 'Eigenpairs',
+  eigenNoReal: 'Matrix has complex eigenvalues — not supported',
 };
 
 export const dictionaries: Record<Lang, Record<TranslationKey, string>> = {

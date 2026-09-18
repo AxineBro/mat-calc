@@ -6,9 +6,7 @@ const COALESCE_MS = 600;
 
 export type MatrixHistory = {
   value: Matrix;
-  /** Коалесцирует изменения в пределах COALESCE_MS — для посимвольного ввода. */
   set: (next: Matrix) => void;
-  /** Дискретное действие — всегда отдельная запись истории. */
   commit: (next: Matrix) => void;
   undo: () => void;
   redo: () => void;
@@ -47,7 +45,6 @@ export function useMatrixHistory(
     }
   }, []);
 
-  /** Превращает отложенную (коалесцированную) запись в реальную. */
   const flushPending = useCallback(() => {
     clearTimer();
     const pending = pendingRef.current;

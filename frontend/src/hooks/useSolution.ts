@@ -2,16 +2,20 @@ import { useEffect, useState } from 'react';
 import {
   ApiError,
   calculateDeterminant,
+  calculateEigen,
   calculateInverse,
   solveByCramer,
+  solveByGauss,
   solveByInverse,
+  type EigenPair,
 } from '../api/matrixApi';
 import type { OperationId } from '../operations';
 
 export type SolutionResult =
   | { kind: 'scalar'; value: number }
   | { kind: 'vector'; value: number[] }
-  | { kind: 'matrix'; value: number[][] };
+  | { kind: 'matrix'; value: number[][] }
+  | { kind: 'eigen'; value: EigenPair[] };
 
 export type SolutionError =
   | { kind: 'network' }
@@ -37,7 +41,8 @@ export function useSolution(
   });
 
   useEffect(() => {
-    const needsVector = mode === 'cramer' || mode === 'solveByInverse';
+    const needsVector =
+  mode === 'cramer' || mode === 'solveByInverse' || mode === 'gauss';
     const ready = matrix !== null && (!needsVector || vector !== null);
 
     if (!ready) {
@@ -68,6 +73,14 @@ export function useSolution(
             case 'solveByInverse':
                 return solveByInverse(matrix!, vector!, signal).then(
                 v => ({ kind: 'vector', value: v }) as SolutionResult,
+                );
+            case 'gauss':
+                return solveByGauss(matrix!, vector!, signal).then(
+                v => ({ kind: 'vector', value: v }) as SolutionResult,
+                );
+            case 'eigen':
+                return calculateEigen(matrix!, signal).then(
+                    v => ({ kind: 'eigen', value: v }) as SolutionResult,
                 );
             }
         })();

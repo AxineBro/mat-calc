@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg  { fill: #ffffff; }
+    .fg  { fill: none; stroke: #1a1a1a; stroke-width: 2.4;
+           stroke-linecap: round; stroke-linejoin: round; }
+    .txt { fill: #1a1a1a; font: 700 12px/1 system-ui, -apple-system, sans-serif; }
+    @media (prefers-color-scheme: dark) {
+      .bg  { fill: #1a1d23; }
+      .fg  { stroke: #e8eaed; }
+      .txt { fill: #e8eaed; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="7"/>
+  <path class="fg" d="M10 6H7v20h3M22 6h3v20h-3"/>
+  <text class="txt" x="16" y="21" text-anchor="middle">A</text>
+</svg>

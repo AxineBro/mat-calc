@@ -10,7 +10,7 @@ export class ApiError extends Error {
   }
 }
 
-const API_BASE = 'http://localhost:8080/api/matrix';
+const API_BASE = '/api/matrix';
 
 async function postJson<T>(
   url: string,
@@ -84,4 +84,34 @@ export async function solveByInverse(
     signal,
   );
   return data.solution;
+}
+
+export async function solveByGauss(
+  matrix: number[][],
+  constants: number[],
+  signal?: AbortSignal,
+): Promise<number[]> {
+  const data = await postJson<{ solution: number[] }>(
+    `${API_BASE}/solve/gauss`,
+    { matrix, constants },
+    signal,
+  );
+  return data.solution;
+}
+
+export type EigenPair = { eigenvalue: number; eigenvector: number[] };
+
+export async function calculateEigen(
+  matrix: number[][],
+  signal?: AbortSignal,
+): Promise<EigenPair[]> {
+  const data = await postJson<{
+    eigenvalues: number[];
+    eigenvectors: number[][];
+  }>(`${API_BASE}/eigen`, { matrix }, signal);
+
+  return data.eigenvalues.map((ev, i) => ({
+    eigenvalue: ev,
+    eigenvector: data.eigenvectors[i],
+  }));
 }

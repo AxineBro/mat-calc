@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
 
-// Применяем тему до первого кадра, чтобы не мигало
 (function applyInitialTheme() {
   const mode = localStorage.getItem('theme');
   const resolved =

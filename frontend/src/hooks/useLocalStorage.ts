@@ -8,18 +8,14 @@ export function useLocalStorage<T>(
     try {
       const raw = localStorage.getItem(key);
       if (raw !== null) return JSON.parse(raw) as T;
-    } catch {
-      /* ignore */
-    }
+    } catch {}
     return typeof initial === 'function' ? (initial as () => T)() : initial;
   });
 
   useEffect(() => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      /* ignore quota / privacy mode */
-    }
+    } catch {}
   }, [key, value]);
 
   return [value, setValue];

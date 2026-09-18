@@ -55,6 +55,7 @@ export function ResultView({
     !parsedVector.ok &&
     parsedVector.emptyCells.length === (vector?.length ?? 0);
 
+  /* ---------- Статус ---------- */
   let statusNode: ReactNode = null;
   let statusKind: 'info' | 'loading' | 'error' = 'info';
 
@@ -89,8 +90,15 @@ export function ResultView({
     if (remote.error.kind === 'server') {
       if (operation.id === 'cramer') {
         statusNode = t('noUniqueSolution');
-      } else if (operation.id === 'inverse' || operation.id === 'solveByInverse') {
+      } else if (operation.id === 'gauss') {
+        statusNode = t('gaussNoUniqueSolution');
+      } else if (
+        operation.id === 'inverse' ||
+        operation.id === 'solveByInverse'
+      ) {
         statusNode = t('singularMatrix');
+      } else if (operation.id === 'eigen') {
+        statusNode = t('eigenNoReal');
       } else {
         statusNode = t('errorServer', { status: remote.error.status ?? '?' });
       }
@@ -108,21 +116,32 @@ export function ResultView({
   async function copyValue() {
     if (!result) return;
     let text = '';
-    if (result.kind === 'scalar') text = formatNumber(result.value);
-    else if (result.kind === 'vector')
-      text = result.value.map((v, i) => `x${i + 1} = ${formatNumber(v)}`).join('\n');
-    else
+    if (result.kind === 'scalar') {
+      text = formatNumber(result.value);
+    } else if (result.kind === 'vector') {
+      text = result.value
+        .map((v, i) => `x${i + 1} = ${formatNumber(v)}`)
+        .join('\n');
+    } else if (result.kind === 'matrix') {
       text = result.value
         .map(row => row.map(formatNumber).join('\t'))
         .join('\n');
+    } else {
+      text = result.value
+        .map(
+          (p, i) =>
+            `λ${i + 1} = ${formatNumber(p.eigenvalue)}\nv${i + 1} = (${p.eigenvector
+              .map(formatNumber)
+              .join(', ')})`,
+        )
+        .join('\n\n');
+    }
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
       if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
       copyTimer.current = window.setTimeout(() => setCopied(false), 1500);
-    } catch {
-      /* ignore */
-    }
+    } catch {}
   }
 
   /* ---------- Пустой стейт ---------- */
@@ -130,7 +149,9 @@ export function ResultView({
     return (
       <div className="card card--empty">
         <div className="empty">
-          <div className="empty__icon"><IconSparkle /></div>
+          <div className="empty__icon">
+            <IconSparkle />
+          </div>
           <div className="empty__text">{t('resultEmpty')}</div>
         </div>
       </div>
@@ -148,12 +169,19 @@ export function ResultView({
     );
   }
 
-  const resultLabel =
-    operation.resultKind === 'scalar'
-      ? t('determinantLabel')
-      : operation.resultKind === 'vector'
-        ? t('solutionLabel')
-        : t('inverseLabel');
+  /* ---------- Заголовок результата ---------- */
+  const resultLabel = (() => {
+    switch (operation.resultKind) {
+      case 'scalar':
+        return t('determinantLabel');
+      case 'vector':
+        return t('solutionLabel');
+      case 'matrix':
+        return t('inverseLabel');
+      case 'eigen':
+        return t('eigenLabel');
+    }
+  })();
 
   return (
     <div className="card" aria-live="polite">
@@ -199,7 +227,10 @@ export function ResultView({
 
         {result.kind === 'matrix' && (
           <div className="matrix-result">
-            <span className="matrix-result__bracket matrix-result__bracket--left" aria-hidden="true" />
+            <span
+              className="matrix-result__bracket matrix-result__bracket--left"
+              aria-hidden="true"
+            />
             <div
               className="matrix-result__grid"
               style={{
@@ -214,7 +245,49 @@ export function ResultView({
                 )),
               )}
             </div>
-            <span className="matrix-result__bracket matrix-result__bracket--right" aria-hidden="true" />
+            <span
+              className="matrix-result__bracket matrix-result__bracket--right"
+              aria-hidden="true"
+            />
+          </div>
+        )}
+
+        {result.kind === 'eigen' && (
+          <div className="eigen">
+            {result.value.map((pair, i) => (
+              <div key={i} className="eigen__pair">
+                <div className="eigen__head">
+                  <span className="eigen__var">
+                    λ<sub>{i + 1}</sub>
+                  </span>
+                  <span className="eigen__eq">=</span>
+                  <span className="eigen__lambda">
+                    {formatNumber(pair.eigenvalue)}
+                  </span>
+                </div>
+
+                <div className="eigen__vec">
+                  <span
+                    className="eigen__vec-bracket"
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="eigen__vec-grid"
+                    style={{ gridTemplateColumns: 'minmax(0, 88px)' }}
+                  >
+                    {pair.eigenvector.map((v, j) => (
+                      <span key={j} className="eigen__vec-cell">
+                        {formatNumber(v)}
+                      </span>
+                    ))}
+                  </div>
+                  <span
+                    className="eigen__vec-bracket"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -230,22 +303,87 @@ export function ResultView({
 }
 
 /* ---------- Мелкие иконки / спиннер ---------- */
+
 function Spinner() {
   return (
     <span className="spinner" aria-hidden="true">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.25" strokeWidth="3" />
-        <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="currentColor"
+          strokeOpacity="0.25"
+          strokeWidth="3"
+        />
+        <path
+          d="M21 12a9 9 0 0 0-9-9"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
       </svg>
     </span>
   );
 }
+
 function IconCopy() {
-  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" strokeWidth="1.8"/><path d="M5 15V6a2 2 0 0 1 2-2h9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>;
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <rect
+        x="9"
+        y="9"
+        width="11"
+        height="11"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M5 15V6a2 2 0 0 1 2-2h9"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 }
+
 function IconCheck() {
-  return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 5 5 9-11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="m5 12 5 5 9-11"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
+
 function IconSparkle() {
-  return <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>;
+  return (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 }

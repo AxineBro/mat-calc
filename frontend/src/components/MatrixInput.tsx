@@ -5,15 +5,12 @@ import type { Matrix } from '../types';
 type Props = {
   name: string;
   value: Matrix;
-  /** Коалесцированные изменения — правка ячеек. */
   onChange: (m: Matrix) => void;
-  /** Дискретные изменения — add/remove строк/столбцов, paste, загрузка файла. */
   onCommit?: (m: Matrix) => void;
   onClear?: () => void;
   onReset?: () => void;
   onUndo?: () => void;
   onRedo?: () => void;
-  /** Пользователь выбрал или перетащил файл. */
   onUpload?: (file: File) => void;
   canUndo?: boolean;
   canRedo?: boolean;
@@ -150,7 +147,6 @@ export function MatrixInput({
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file && onUpload) onUpload(file);
-    // Сбрасываем значение, чтобы можно было загрузить тот же файл повторно.
     e.target.value = '';
   }
 

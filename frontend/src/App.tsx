@@ -46,9 +46,7 @@ function loadInitial(): Matrix {
         return parsed as Matrix;
       }
     }
-  } catch {
-    /* ignore */
-  }
+  } catch {}
   return emptyMatrix(DEFAULT_ROWS, DEFAULT_COLS);
 }
 
@@ -73,9 +71,7 @@ function loadVector(size: number): Vector {
         return arr.slice(0, size);
       }
     }
-  } catch {
-    /* ignore */
-  }
+  } catch {}
   return emptyVector(size);
 }
 
@@ -105,12 +101,10 @@ function Calculator() {
   const operation = OPERATION_BY_ID[mode];
   const needsVector = operation.requiresVector;
 
-  /* -------- Персистентность -------- */
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(a)); } catch {} }, [a]);
   useEffect(() => { try { localStorage.setItem(STORAGE_B_KEY, JSON.stringify(b)); } catch {} }, [b]);
   useEffect(() => { try { localStorage.setItem(STORAGE_MODE_KEY, mode); } catch {} }, [mode]);
 
-  /* -------- Синхронизация длины b с числом строк A -------- */
   useEffect(() => {
     setB(prev => {
       if (prev.length === a.length) return prev;
@@ -121,7 +115,6 @@ function Calculator() {
     });
   }, [a.length]);
 
-  /* -------- Undo/Redo -------- */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const mod = e.metaKey || e.ctrlKey;
@@ -138,14 +131,12 @@ function Calculator() {
     return () => window.removeEventListener('keydown', onKey);
   }, [history]);
 
-  /* -------- Скрытие ошибки загрузки -------- */
   useEffect(() => {
     if (!uploadError) return;
     const timer = window.setTimeout(() => setUploadError(null), 4500);
     return () => window.clearTimeout(timer);
   }, [uploadError]);
 
-  /* -------- Парсинг -------- */
   const parsed = useMemo(() => parseMatrix(a), [a]);
   const parsedVector = useMemo(() => (needsVector ? parseVector(b) : null), [b, needsVector]);
 
@@ -197,14 +188,10 @@ function Calculator() {
 
   return (
     <div className="app">
-      <Header />
+      <Header mode={mode} onModeChange={setMode} />
+
       <main className="workspace">
         <section className="workspace__inputs">
-          <div className="workspace__op">
-            <label className="workspace__op-label">{t('operationLabel')}</label>
-            <OperationPicker value={mode} onChange={setMode} />
-          </div>
-
           <AugmentedMatrix
             matrix={a}
             vector={needsVector ? b : null}
