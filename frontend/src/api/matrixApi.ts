@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL ?? '/api';
+import type { CalculatorMode } from '../types';
 
 export class ApiError extends Error {
   status?: number;
@@ -10,22 +10,53 @@ export class ApiError extends Error {
   }
 }
 
+const API_BASE = '/api/matrix';
+
+async function postJson<T>(
+  url: string,
+  body: unknown,
+  signal?: AbortSignal,
+): Promise<T> {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal,
+  });
+
+  if (!response.ok) {
+    let message = `Request failed: ${response.status}`;
+    try {
+      const data = await response.json();
+      if (data && typeof data.message === 'string') message = data.message;
+    } catch {
+    }
+    throw new ApiError(message, response.status);
+  }
+  return response.json() as Promise<T>;
+}
+
 export async function calculateDeterminant(
   matrix: number[][],
   signal?: AbortSignal,
 ): Promise<number> {
-  const res = await fetch(`${API_BASE}/matrix/determinant`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ matrix }),
+  const data = await postJson<{ determinant: number }>(
+    `${API_BASE}/determinant`,
+    { matrix },
     signal,
-  });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new ApiError(text || `Ошибка сервера (${res.status})`, res.status);
-  }
-
-  const data = (await res.json()) as { determinant: number };
+  );
   return data.determinant;
+}
+
+export async function solveByCramer(
+  matrix: number[][],
+  constants: number[],
+  signal?: AbortSignal,
+): Promise<number[]> {
+  const data = await postJson<{ solution: number[] }>(
+    `${API_BASE}/solve/cramer`,
+    { matrix, constants },
+    signal,
+  );
+  return data.solution;
 }
