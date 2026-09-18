@@ -1,5 +1,3 @@
-import type { CalculatorMode } from '../types';
-
 export class ApiError extends Error {
   status?: number;
 

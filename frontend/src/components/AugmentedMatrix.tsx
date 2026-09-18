@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useI18n } from '../i18n/I18nContext';
 import type { Matrix, Vector } from '../types';
 
@@ -11,8 +11,6 @@ type Props = {
   invalidMatrixCells: Set<string>;
   invalidVectorCells: Set<number>;
   maxSize: number;
-  resetRows: number;
-  resetCols: number;
   canUndo: boolean;
   canRedo: boolean;
   onUndo: () => void;
@@ -31,8 +29,6 @@ export function AugmentedMatrix({
   invalidMatrixCells,
   invalidVectorCells,
   maxSize,
-  resetRows,
-  resetCols,
   canUndo,
   canRedo,
   onUndo,

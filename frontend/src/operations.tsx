@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { TranslationKey } from './i18n/translations';
 
 export type OperationId =
   | 'determinant'
@@ -15,9 +16,9 @@ export type ResultKind = 'scalar' | 'vector' | 'matrix' | 'eigen';
 export type OperationDef = {
   id: OperationId;
   category: OperationCategory;
-  labelKey: string;
-  descriptionKey: string;
-  shapeKey: string;
+  labelKey: TranslationKey;
+  descriptionKey: TranslationKey;
+  shapeKey: TranslationKey;
   icon: ReactNode;
   requiresVector: boolean;
   requiresSquare: boolean;
@@ -98,7 +99,7 @@ export const OPERATION_BY_ID = Object.fromEntries(
 ) as Record<OperationId, OperationDef>;
 
 export const CATEGORY_ORDER: OperationCategory[] = ['matrix', 'system'];
-export const CATEGORY_LABEL_KEY: Record<OperationCategory, string> = {
+export const CATEGORY_LABEL_KEY: Record<OperationCategory, TranslationKey> = {
   matrix: 'opCategoryMatrix',
   system: 'opCategorySystem',
 };

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Header } from './components/Header';
 import { AugmentedMatrix } from './components/AugmentedMatrix';
-import { OperationPicker } from './components/OperationPicker';
 import { ResultView } from './components/ResultView';
 import { useSolution } from './hooks/useSolution';
 import { useMatrixHistory } from './hooks/useMatrixHistory';
@@ -201,8 +200,6 @@ function Calculator() {
             invalidMatrixCells={invalidMatrixCells}
             invalidVectorCells={invalidVectorCells}
             maxSize={MAX_SIZE}
-            resetRows={DEFAULT_ROWS}
-            resetCols={DEFAULT_COLS}
             canUndo={history.canUndo}
             canRedo={history.canRedo}
             onUndo={history.undo}
