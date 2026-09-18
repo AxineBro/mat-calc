@@ -22,4 +22,14 @@ public class MatrixService {
         LinearSystem system = new LinearSystem(coefficients, constants);
         return registry.<LinearSystem, double[]>get(OperationType.CRAMER).execute(system);
     }
+
+    public double[][] inverse(Matrix matrix) {
+        return registry.<Matrix, double[][]>get(OperationType.INVERSE).execute(matrix);
+    }
+
+    public double[] solveByInverse(Matrix coefficients, double[] constants) {
+        LinearSystem system = new LinearSystem(coefficients, constants);
+        return registry.<LinearSystem, double[]>get(OperationType.SOLVE_BY_INVERSE)
+                .execute(system);
+    }
 }

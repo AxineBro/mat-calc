@@ -15,13 +15,6 @@ type Props = {
   remote: SolutionState;
 };
 
-const SUBS = '₀₁₂₃₄₅₆₇₈₉';
-const subscript = (n: number) =>
-  String(n)
-    .split('')
-    .map(d => SUBS[Number(d)] ?? d)
-    .join('');
-
 function formatNumber(n: number): string {
   if (Number.isInteger(n)) return n.toString();
   return Number(n.toFixed(6)).toString();
@@ -38,7 +31,7 @@ export function ResultView({
   const { t } = useI18n();
   const [copied, setCopied] = useState(false);
   const copyTimer = useRef<number | null>(null);
-  const values = remote.values;
+  const result = remote.result;
 
   useEffect(() => {
     return () => {
@@ -46,7 +39,7 @@ export function ResultView({
     };
   }, []);
 
-  /* -------- Валидация и статус -------- */
+  /* ---------- Валидация ---------- */
   const totalCells = matrix.reduce((s, r) => s + r.length, 0);
   const isCompletelyEmpty = !parsed.ok && parsed.emptyCells.length === totalCells;
 
@@ -56,9 +49,10 @@ export function ResultView({
     parsed.matrix.length === parsed.matrix[0]?.length;
 
   const needsVector = operation.requiresVector;
-  const vectorValid = !needsVector || (parsedVector?.ok ?? false);
   const vectorEmptyCompletely =
-    needsVector && parsedVector && !parsedVector.ok &&
+    needsVector &&
+    parsedVector &&
+    !parsedVector.ok &&
     parsedVector.emptyCells.length === (vector?.length ?? 0);
 
   let statusNode: ReactNode = null;
@@ -78,48 +72,61 @@ export function ResultView({
   } else if (needsVector && parsedVector && !parsedVector.ok) {
     if (parsedVector.invalidCells.length > 0) {
       statusKind = 'error';
-      statusNode = t('invalidVectorCells', { count: parsedVector.invalidCells.length });
+      statusNode = t('invalidVectorCells', {
+        count: parsedVector.invalidCells.length,
+      });
     } else if (!vectorEmptyCompletely) {
       statusKind = 'info';
-      statusNode = t('fillVectorRemaining', { count: parsedVector.emptyCells.length });
+      statusNode = t('fillVectorRemaining', {
+        count: parsedVector.emptyCells.length,
+      });
     }
   } else if (remote.status === 'loading') {
     statusKind = 'loading';
     statusNode = t('resultLoading');
   } else if (remote.status === 'error') {
     statusKind = 'error';
-    statusNode =
-      remote.error.kind === 'server'
-        ? operation.id === 'cramer'
-          ? t('noUniqueSolution')
-          : t('errorServer', { status: remote.error.status ?? '?' })
-        : remote.error.kind === 'network'
-          ? t('errorNetwork')
-          : t('errorCompute');
+    if (remote.error.kind === 'server') {
+      if (operation.id === 'cramer') {
+        statusNode = t('noUniqueSolution');
+      } else if (operation.id === 'inverse' || operation.id === 'solveByInverse') {
+        statusNode = t('singularMatrix');
+      } else {
+        statusNode = t('errorServer', { status: remote.error.status ?? '?' });
+      }
+    } else if (remote.error.kind === 'network') {
+      statusNode = t('errorNetwork');
+    } else {
+      statusNode = t('errorCompute');
+    }
   }
 
-  const hasValues = Array.isArray(values) && values.length > 0;
-  const isStale = hasValues && remote.status !== 'success';
+  const hasResult = result !== null;
+  const isStale = hasResult && remote.status !== 'success';
 
-  /* -------- Копирование -------- */
+  /* ---------- Копирование ---------- */
   async function copyValue() {
-    if (!values) return;
+    if (!result) return;
+    let text = '';
+    if (result.kind === 'scalar') text = formatNumber(result.value);
+    else if (result.kind === 'vector')
+      text = result.value.map((v, i) => `x${i + 1} = ${formatNumber(v)}`).join('\n');
+    else
+      text = result.value
+        .map(row => row.map(formatNumber).join('\t'))
+        .join('\n');
     try {
-      const text =
-        operation.id === 'determinant'
-          ? formatNumber(values[0])
-          : values.map((v, i) => `x${subscript(i + 1)} = ${formatNumber(v)}`).join('\n');
       await navigator.clipboard.writeText(text);
       setCopied(true);
       if (copyTimer.current !== null) window.clearTimeout(copyTimer.current);
       copyTimer.current = window.setTimeout(() => setCopied(false), 1500);
     } catch {
-      /* clipboard unavailable */
+      /* ignore */
     }
   }
 
-  /* -------- Пустой стейт -------- */
-  if (!hasValues && !statusNode && isCompletelyEmpty) {
+  /* ---------- Пустой стейт ---------- */
+  if (!hasResult && !statusNode && isCompletelyEmpty) {
     return (
       <div className="card card--empty">
         <div className="empty">
@@ -130,7 +137,7 @@ export function ResultView({
     );
   }
 
-  if (!hasValues) {
+  if (!hasResult) {
     return (
       <div className="card" aria-live="polite">
         <div className={`placeholder placeholder--${statusKind}`}>
@@ -141,16 +148,19 @@ export function ResultView({
     );
   }
 
+  const resultLabel =
+    operation.resultKind === 'scalar'
+      ? t('determinantLabel')
+      : operation.resultKind === 'vector'
+        ? t('solutionLabel')
+        : t('inverseLabel');
+
   return (
     <div className="card" aria-live="polite">
       <div className={`card__body ${isStale ? 'card__body--stale' : ''}`}>
         <div className="card__head">
           <div className="card__title">
-            <span className="card__label">
-              {operation.id === 'determinant'
-                ? t('determinantLabel')
-                : t('solutionLabel')}
-            </span>
+            <span className="card__label">{resultLabel}</span>
             {parsed.ok && (
               <span className="card__context">
                 {parsed.matrix.length} × {parsed.matrix[0]?.length ?? 0}
@@ -169,11 +179,13 @@ export function ResultView({
           </button>
         </div>
 
-        {operation.id === 'determinant' ? (
-          <div className="scalar">{formatNumber(values[0])}</div>
-        ) : (
+        {result.kind === 'scalar' && (
+          <div className="scalar">{formatNumber(result.value)}</div>
+        )}
+
+        {result.kind === 'vector' && (
           <div className="solution">
-            {values.map((v, i) => (
+            {result.value.map((v, i) => (
               <div key={i} className="solution__chip">
                 <span className="solution__var">
                   x<sub>{i + 1}</sub>
@@ -182,6 +194,27 @@ export function ResultView({
                 <span className="solution__val">{formatNumber(v)}</span>
               </div>
             ))}
+          </div>
+        )}
+
+        {result.kind === 'matrix' && (
+          <div className="matrix-result">
+            <span className="matrix-result__bracket matrix-result__bracket--left" aria-hidden="true" />
+            <div
+              className="matrix-result__grid"
+              style={{
+                gridTemplateColumns: `repeat(${result.value[0]?.length ?? 0}, minmax(0, 72px))`,
+              }}
+            >
+              {result.value.flatMap((row, r) =>
+                row.map((v, c) => (
+                  <div key={`${r}-${c}`} className="matrix-result__cell">
+                    {formatNumber(v)}
+                  </div>
+                )),
+              )}
+            </div>
+            <span className="matrix-result__bracket matrix-result__bracket--right" aria-hidden="true" />
           </div>
         )}
       </div>
@@ -196,6 +229,7 @@ export function ResultView({
   );
 }
 
+/* ---------- Мелкие иконки / спиннер ---------- */
 function Spinner() {
   return (
     <span className="spinner" aria-hidden="true">

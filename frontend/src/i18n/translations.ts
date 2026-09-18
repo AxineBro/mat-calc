@@ -84,6 +84,17 @@ const ru = {
   fillVectorRemaining: 'Заполните ещё {count} знач.',
   requiresSquare: 'Для этой операции нужна квадратная матрица',
   noUniqueSolution: 'Система не имеет единственного решения (det A = 0)',
+
+  opInverseLabel: 'Обратная матрица',
+  opInverseDesc: 'Матрица A⁻¹, такая что A · A⁻¹ = E',
+  opInverseShape: 'A → A⁻¹',
+
+  inverseLabel: 'Обратная матрица',
+  singularMatrix: 'Матрица вырождена — обратной не существует',
+
+  opSolveByInverseLabel: 'Метод обратной матрицы',
+  opSolveByInverseDesc: 'Решение СЛАУ как x = A⁻¹ · b',
+  opSolveByInverseShape: '[A | b] → x₁ … xₙ',
 };
 
 export type TranslationKey = keyof typeof ru;
@@ -172,6 +183,17 @@ const en: Record<TranslationKey, string> = {
   fillVectorRemaining: 'Fill {count} more value(s)',
   requiresSquare: 'This operation requires a square matrix',
   noUniqueSolution: 'No unique solution (det A = 0)',
+
+  opInverseLabel: 'Inverse matrix',
+  opInverseDesc: 'Matrix A⁻¹ such that A · A⁻¹ = E',
+  opInverseShape: 'A → A⁻¹',
+
+  inverseLabel: 'Inverse matrix',
+  singularMatrix: 'Matrix is singular — no inverse exists',
+
+  opSolveByInverseLabel: 'Inverse-matrix method',
+  opSolveByInverseDesc: 'Solve SLE as x = A⁻¹ · b',
+  opSolveByInverseShape: '[A | b] → x₁ … xₙ',
 };
 
 export const dictionaries: Record<Lang, Record<TranslationKey, string>> = {

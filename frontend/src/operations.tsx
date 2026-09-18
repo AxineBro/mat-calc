@@ -1,22 +1,23 @@
 import type { ReactNode } from 'react';
 
-export type OperationId = 'determinant' | 'cramer';
+export type OperationId =
+  | 'determinant'
+  | 'inverse'
+  | 'cramer'
+  | 'solveByInverse';
 export type OperationCategory = 'matrix' | 'system';
+export type ResultKind = 'scalar' | 'vector' | 'matrix';
 
 export type OperationDef = {
   id: OperationId;
   category: OperationCategory;
-  /** ключ перевода для названия */
   labelKey: string;
-  /** ключ перевода для короткого описания (показывается в дропдауне) */
   descriptionKey: string;
-  /** ключ перевода для подписи входных данных, напр. "A → число" */
   shapeKey: string;
   icon: ReactNode;
-  /** Нужен ли вектор свободных членов — если да, показываем augmented-вид */
   requiresVector: boolean;
-  /** Требуется ли квадратная матрица */
   requiresSquare: boolean;
+  resultKind: ResultKind;
 };
 
 export const OPERATIONS: OperationDef[] = [
@@ -29,6 +30,18 @@ export const OPERATIONS: OperationDef[] = [
     icon: <IconScalar />,
     requiresVector: false,
     requiresSquare: true,
+    resultKind: 'scalar',
+  },
+  {
+    id: 'inverse',
+    category: 'matrix',
+    labelKey: 'opInverseLabel',
+    descriptionKey: 'opInverseDesc',
+    shapeKey: 'opInverseShape',
+    icon: <IconInverse />,
+    requiresVector: false,
+    requiresSquare: true,
+    resultKind: 'matrix',
   },
   {
     id: 'cramer',
@@ -39,10 +52,19 @@ export const OPERATIONS: OperationDef[] = [
     icon: <IconSystem />,
     requiresVector: true,
     requiresSquare: true,
+    resultKind: 'vector',
   },
-  // Сюда добавляешь новые — UI подхватит автоматически.
-  // Например:
-  // { id: 'inverse', category: 'matrix', ... requiresVector: false, requiresSquare: true }
+  {
+    id: 'solveByInverse',
+    category: 'system',
+    labelKey: 'opSolveByInverseLabel',
+    descriptionKey: 'opSolveByInverseDesc',
+    shapeKey: 'opSolveByInverseShape',
+    icon: <IconInverseSystem />,
+    requiresVector: true,
+    requiresSquare: true,
+    resultKind: 'vector',
+    },
 ];
 
 export const OPERATION_BY_ID = Object.fromEntries(
@@ -66,11 +88,38 @@ function IconScalar() {
   );
 }
 
+function IconInverse() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="8" height="18" rx="2" stroke="currentColor" strokeWidth="1.7" />
+      <rect x="13" y="3" width="8" height="18" rx="2" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M10 12h4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M14 9l3 3-3 3" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function IconSystem() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M8 4H4v16h4M16 4h4v16h-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M12 4v16" stroke="currentColor" strokeWidth="1.7" strokeDasharray="2 2.5" />
+    </svg>
+  );
+}
+
+function IconInverseSystem() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M7 4H4v16h3M17 4h3v16h-3"
+        stroke="currentColor" strokeWidth="1.7"
+        strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 4v16"
+        stroke="currentColor" strokeWidth="1.7" strokeDasharray="2 2.5" />
+      <path d="M10 12h4M14 9l3 3-3 3"
+        stroke="currentColor" strokeWidth="1.7"
+        strokeLinecap="round" strokeLinejoin="round"
+        transform="translate(-3 0)" />
     </svg>
   );
 }

@@ -10,7 +10,7 @@ export class ApiError extends Error {
   }
 }
 
-const API_BASE = '/api/matrix';
+const API_BASE = 'http://localhost:8080/api/matrix';
 
 async function postJson<T>(
   url: string,
@@ -55,6 +55,31 @@ export async function solveByCramer(
 ): Promise<number[]> {
   const data = await postJson<{ solution: number[] }>(
     `${API_BASE}/solve/cramer`,
+    { matrix, constants },
+    signal,
+  );
+  return data.solution;
+}
+
+export async function calculateInverse(
+  matrix: number[][],
+  signal?: AbortSignal,
+): Promise<number[][]> {
+  const data = await postJson<{ matrix: number[][] }>(
+    `${API_BASE}/inverse`,
+    { matrix },
+    signal,
+  );
+  return data.matrix;
+}
+
+export async function solveByInverse(
+  matrix: number[][],
+  constants: number[],
+  signal?: AbortSignal,
+): Promise<number[]> {
+  const data = await postJson<{ solution: number[] }>(
+    `${API_BASE}/solve/inverse`,
     { matrix, constants },
     signal,
   );

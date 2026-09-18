@@ -1137,3 +1137,55 @@ button { font: inherit; }
   color: var(--error-text);
   font-size: 13px;
 }
+
+/* ============ Результат — матрица ============ */
+.matrix-result {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 8px;
+  max-width: 100%;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.matrix-result__bracket {
+  flex-shrink: 0;
+  width: 10px;
+  border: 2px solid var(--border-strong);
+}
+.matrix-result__bracket--left {
+  border-right: none;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.matrix-result__bracket--right {
+  border-left: none;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.matrix-result__grid {
+  display: grid;
+  gap: 6px;
+  align-content: center;
+  min-width: 0;
+  max-width: 100%;
+  padding: 4px 4px;
+}
+
+.matrix-result__cell {
+  min-width: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  word-break: break-all;
+  text-align: center;
+}
