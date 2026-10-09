@@ -44,6 +44,7 @@ const ru = {
   invalidCells: 'Некорректных ячеек: {count}',
   copy: 'Копировать',
   copied: 'Скопировано',
+  answerLabel: 'Краткий ответ',
 
   // --- Ошибки ---
   errorNetwork: 'Нет соединения с сервером',
@@ -109,6 +110,19 @@ const ru = {
     'Система не имеет единственного решения (нет решений или их бесконечно много)',
   eigenLabel: 'Собственные пары',
   eigenNoReal: 'У матрицы есть комплексные собственные значения — не поддерживается',
+
+  // --- Теория информации ---
+  opCategoryInformation: 'Теория информации',
+  opInfoMarginalsLabel: 'Маргинальные вероятности',
+  opInfoMarginalsDesc: 'p(xᵢ), p(yⱼ) и проверка независимости',
+  opInfoMarginalsShape: 'Совместное распределение',
+  opInfoConditionalsLabel: 'Условные вероятности',
+  opInfoConditionalsDesc: 'p(xᵢ|yⱼ), p(yⱼ|xᵢ)',
+  opInfoConditionalsShape: 'Совместное распределение',
+  opInfoEntropyLabel: 'Энтропия',
+  opInfoEntropyDesc: 'H(X), H(Y), H(XY), H_Y(X), H_X(Y)',
+  opInfoEntropyShape: 'Совместное распределение',
+  solutionStepsLabel: 'Пошаговое решение',
 };
 
 export type TranslationKey = keyof typeof ru;
@@ -155,6 +169,7 @@ const en: Record<TranslationKey, string> = {
   invalidCells: 'Invalid cells: {count}',
   copy: 'Copy',
   copied: 'Copied',
+  answerLabel: 'Short answer',
 
   // --- Errors ---
   errorNetwork: 'Cannot reach the server',
@@ -219,6 +234,19 @@ const en: Record<TranslationKey, string> = {
     'System has no unique solution (none or infinitely many)',
   eigenLabel: 'Eigenpairs',
   eigenNoReal: 'Matrix has complex eigenvalues — not supported',
+
+  // --- Information theory ---
+  opCategoryInformation: 'Information theory',
+  opInfoMarginalsLabel: 'Marginal probabilities',
+  opInfoMarginalsDesc: 'p(xᵢ), p(yⱼ) and independence check',
+  opInfoMarginalsShape: 'Joint distribution',
+  opInfoConditionalsLabel: 'Conditional probabilities',
+  opInfoConditionalsDesc: 'p(xᵢ|yⱼ), p(yⱼ|xᵢ)',
+  opInfoConditionalsShape: 'Joint distribution',
+  opInfoEntropyLabel: 'Entropy',
+  opInfoEntropyDesc: 'H(X), H(Y), H(XY), H_Y(X), H_X(Y)',
+  opInfoEntropyShape: 'Joint distribution',
+  solutionStepsLabel: 'Step-by-step solution',
 };
 
 /* =========================================================

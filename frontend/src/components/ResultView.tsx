@@ -5,6 +5,7 @@ import type { MatrixParseResult } from '../utils/matrix';
 import type { VectorParseResult } from '../utils/vector';
 import type { OperationDef } from '../operations';
 import type { Matrix, Vector } from '../types';
+import { MathText } from './MathText';
 
 type Props = {
   operation: OperationDef;
@@ -39,7 +40,6 @@ export function ResultView({
     };
   }, []);
 
-  /* ---------- Валидация ---------- */
   const totalCells = matrix.reduce((s, r) => s + r.length, 0);
   const isCompletelyEmpty = !parsed.ok && parsed.emptyCells.length === totalCells;
 
@@ -48,14 +48,13 @@ export function ResultView({
     parsed.matrix.length > 0 &&
     parsed.matrix.length === parsed.matrix[0]?.length;
 
-  const needsVector = operation.requiresVector;
+  const needsVector = operation.inputKind === 'augmented';
   const vectorEmptyCompletely =
     needsVector &&
     parsedVector &&
     !parsedVector.ok &&
     parsedVector.emptyCells.length === (vector?.length ?? 0);
 
-  /* ---------- Статус ---------- */
   let statusNode: ReactNode = null;
   let statusKind: 'info' | 'loading' | 'error' = 'info';
 
@@ -87,7 +86,11 @@ export function ResultView({
     statusNode = t('resultLoading');
   } else if (remote.status === 'error') {
     statusKind = 'error';
-    if (remote.error.kind === 'server') {
+    if (operation.category === 'information' && remote.error.kind === 'server') {
+      statusNode =
+        remote.error.message ??
+        t('errorServer', { status: remote.error.status ?? '?' });
+    } else if (remote.error.kind === 'server') {
       if (operation.id === 'cramer') {
         statusNode = t('noUniqueSolution');
       } else if (operation.id === 'gauss') {
@@ -112,7 +115,6 @@ export function ResultView({
   const hasResult = result !== null;
   const isStale = hasResult && remote.status !== 'success';
 
-  /* ---------- Копирование ---------- */
   async function copyValue() {
     if (!result) return;
     let text = '';
@@ -126,7 +128,7 @@ export function ResultView({
       text = result.value
         .map(row => row.map(formatNumber).join('\t'))
         .join('\n');
-    } else {
+    } else if (result.kind === 'eigen') {
       text = result.value
         .map(
           (p, i) =>
@@ -135,6 +137,8 @@ export function ResultView({
               .join(', ')})`,
         )
         .join('\n\n');
+    } else {
+      text = result.value.answer;
     }
     try {
       await navigator.clipboard.writeText(text);
@@ -144,7 +148,6 @@ export function ResultView({
     } catch {}
   }
 
-  /* ---------- Пустой стейт ---------- */
   if (!hasResult && !statusNode && isCompletelyEmpty) {
     return (
       <div className="card card--empty">
@@ -169,7 +172,6 @@ export function ResultView({
     );
   }
 
-  /* ---------- Заголовок результата ---------- */
   const resultLabel = (() => {
     switch (operation.resultKind) {
       case 'scalar':
@@ -180,6 +182,8 @@ export function ResultView({
         return t('inverseLabel');
       case 'eigen':
         return t('eigenLabel');
+      case 'sections':
+        return t('answerLabel');
     }
   })();
 
@@ -267,10 +271,7 @@ export function ResultView({
                 </div>
 
                 <div className="eigen__vec">
-                  <span
-                    className="eigen__vec-bracket"
-                    aria-hidden="true"
-                  />
+                  <span className="eigen__vec-bracket" aria-hidden="true" />
                   <div
                     className="eigen__vec-grid"
                     style={{ gridTemplateColumns: 'minmax(0, 88px)' }}
@@ -281,15 +282,14 @@ export function ResultView({
                       </span>
                     ))}
                   </div>
-                  <span
-                    className="eigen__vec-bracket"
-                    aria-hidden="true"
-                  />
+                  <span className="eigen__vec-bracket" aria-hidden="true" />
                 </div>
               </div>
             ))}
           </div>
         )}
+
+        {result.kind === 'sections' && <ShortAnswer text={result.value.answer} />}
       </div>
 
       {statusNode && (
@@ -298,6 +298,41 @@ export function ResultView({
           <span>{statusNode}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+function ShortAnswer({ text }: { text: string }) {
+  const parts = text.split(', ');
+  const allAssignments =
+    parts.length > 1 && parts.every(p => p.includes(' = '));
+
+  if (!allAssignments) {
+    return (
+      <div className="short-answer">
+        <MathText>{text}</MathText>
+      </div>
+    );
+  }
+
+  return (
+    <div className="short-answer short-answer--chips">
+      {parts.map((p, i) => {
+        const eq = p.indexOf(' = ');
+        const label = p.slice(0, eq);
+        const value = p.slice(eq + 3);
+        return (
+          <div key={i} className="short-answer__chip">
+            <span className="short-answer__label">
+              <MathText>{label}</MathText>
+            </span>
+            <span className="short-answer__eq">=</span>
+            <span className="short-answer__value">
+              <MathText>{value}</MathText>
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

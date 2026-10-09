@@ -41,6 +41,7 @@ export function OperationPicker({ value, onChange }: Props) {
     const map: Record<OperationCategory, OperationDef[]> = {
       matrix: [],
       system: [],
+      information: [],
     };
     for (const op of filtered) map[op.category].push(op);
     return CATEGORY_ORDER.map(cat => ({ cat, ops: map[cat] })).filter(

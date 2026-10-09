@@ -1370,3 +1370,303 @@ button { font: inherit; }
   color: var(--error-text);
   font-size: 13px;
 }
+
+/* =========================================================
+   18. LaTeX (KaTeX)
+   ========================================================= */
+.latex {
+  font-size: 15px;
+  line-height: 1.6;
+}
+.latex .katex-display {
+  margin: 6px 0;
+  text-align: left;
+}
+.latex .katex {
+  color: var(--text);
+  font-size: 1em;
+}
+
+/* =========================================================
+   19. Совместное распределение (joint)
+   ========================================================= */
+.joint {
+  align-self: flex-start;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.joint__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.joint__dim {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.joint__buttons {
+  display: inline-flex;
+  gap: 4px;
+}
+.joint__buttons .tool {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.joint__grid-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.joint__grid {
+  display: grid;
+  gap: 6px;
+  padding: 6px 4px;
+  align-items: stretch;
+}
+.joint__corner {
+  width: 44px;
+  height: 32px;
+}
+.joint__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text-faint);
+  font-style: italic;
+  user-select: none;
+  padding: 0 4px;
+  min-width: 0;
+}
+.joint__header--y { font-style: normal; }
+.joint__header--x { font-style: normal; justify-content: flex-start; }
+
+.joint__cell {
+  height: 42px;
+  padding: 0 8px;
+  text-align: center;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  outline: none;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color .12s, box-shadow .12s, background-color .15s;
+}
+.joint__cell:hover { border-color: var(--text-muted); }
+.joint__cell:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+.joint__cell--invalid {
+  border-color: var(--error-cell-border);
+  background: var(--error-cell-bg);
+}
+
+.joint__sum {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.joint__sum--ok  { color: #16a34a; }
+.joint__sum--err { color: var(--error-text); }
+[data-theme="dark"] .joint__sum--ok { color: #4ade80; }
+.joint__sum-label { font-weight: 600; }
+.joint__sum-value { font-weight: 600; }
+.joint__sum-hint  { color: var(--text-faint); font-weight: 400; }
+.joint__sum--ok .joint__sum-hint  { color: inherit; }
+.joint__sum--err .joint__sum-hint { color: inherit; }
+
+/* =========================================================
+   20. Пошаговое решение (sections / step)
+   ========================================================= */
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 4px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.section__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.section__summary {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-strong);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 0;
+}
+.step + .step {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.step__title {
+  font-size: 12px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-weight: 600;
+}
+.step__formula,
+.step__substitution {
+  padding: 4px 0;
+  overflow-x: auto;
+  max-width: 100%;
+}
+.step__result {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.step__note {
+  font-size: 12px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.sections__answer {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .joint__grid { gap: 4px; }
+  .joint__cell { height: 36px; padding: 0 6px; font-size: 14px; }
+}
+
+/* =========================================================
+   21. Краткий ответ (info)
+   ========================================================= */
+.short-answer {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  word-break: break-word;
+}
+
+/* =========================================================
+   22. Панель пошагового решения (снизу)
+   ========================================================= */
+.steps-panel {
+  max-width: 1180px;
+  margin: 0 auto 40px;
+  padding: 0 32px;
+}
+
+.steps-panel__title {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.steps-panel .sections {
+  padding: 22px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+@media (max-width: 900px) {
+  .steps-panel { padding: 0 20px; margin-bottom: 24px; }
+}
+@media (max-width: 800px) {
+  .steps-panel { padding: 0 16px; margin-bottom: 16px; }
+}
+
+.short-answer--chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.short-answer__chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.short-answer__label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.short-answer__eq {
+  color: var(--text-faint);
+  font-size: 13px;
+}
+.short-answer__value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+/* Подстрочные индексы в обычном тексте */
+.short-answer sub,
+.step__title sub,
+.step__result sub,
+.step__note sub,
+.section__title sub,
+.section__summary sub,
+.sections__answer sub {
+  font-size: 0.7em;
+  line-height: 0;
+  vertical-align: -0.25em;
+}

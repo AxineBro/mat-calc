@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/matrix")
+@CrossOrigin(origins = "http://localhost:5173")
 public class MatrixController {
 
     private final MatrixService matrixService;

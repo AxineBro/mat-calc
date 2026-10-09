@@ -1,6 +1,7 @@
 package github.axine.matrixcalculator.api.error;
 
 import github.axine.matrixcalculator.domain.exception.InvalidMatrixException;
+import github.axine.matrixcalculator.domain.exception.InvalidProbabilityException;
 import github.axine.matrixcalculator.domain.exception.SingularMatrixException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SingularMatrixException.class)
     public ResponseEntity<ApiError> handle(SingularMatrixException ex) {
+        return ResponseEntity.badRequest().body(new ApiError(ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidProbabilityException.class)
+    public ResponseEntity<ApiError> handle(InvalidProbabilityException ex) {
         return ResponseEntity.badRequest().body(new ApiError(ex.getMessage()));
     }
 }
